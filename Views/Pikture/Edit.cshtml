@@ -1,0 +1,43 @@
+@model PROJEKTDB.Models.Pikture
+
+<h2>Edit Pikture</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="PikId" />
+
+    <div class="mb-3">
+        <label asp-for="PikId" class="form-label"></label>
+        <input asp-for="PikId" class="form-control" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PikTit" class="form-label"></label>
+        <input asp-for="PikTit" class="form-control" />
+        <span asp-validation-for="PikTit" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PikCmim" class="form-label"></label>
+        <input asp-for="PikCmim" class="form-control" />
+        <span asp-validation-for="PikCmim" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Person</label>
+        <select asp-for="PerId" class="form-select" asp-items="ViewBag.Persons"></select>
+        <span asp-validation-for="PerId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Galeri</label>
+        <select asp-for="GalId" class="form-select" asp-items="ViewBag.Galeris"></select>
+        <span asp-validation-for="GalId" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

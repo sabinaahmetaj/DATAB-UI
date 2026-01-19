@@ -1,0 +1,58 @@
+@model IEnumerable<PROJEKTDB.Models.Galeri>
+
+<div class="card-glass p-4 mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="page-title mb-0">Galeritë</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            ➕ Create New
+        </a>
+    </div>
+
+    <!-- TABLE WRAPPER -->
+    <div class="table-responsive">
+        <table class="table align-middle table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Manager</th>
+                    <th>Phone</th>
+                    <th>Zone</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.GalId</td>
+                    <td>@item.GalMng</td>
+                    <td>@item.GalTel</td>
+                    <td>@item.GalZon</td>
+                    <td class="text-end">
+                        <a asp-action="Edit"
+                           asp-route-id="@item.GalId"
+                           class="btn btn-sm btn-outline-warning">
+                            Edit
+                        </a>
+
+                        <a asp-action="Details"
+                           asp-route-id="@item.GalId"
+                           class="btn btn-sm btn-outline-info ms-1">
+                            Details
+                        </a>
+
+                        <a asp-action="Delete"
+                           asp-route-id="@item.GalId"
+                           class="btn btn-sm btn-outline-danger ms-1">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

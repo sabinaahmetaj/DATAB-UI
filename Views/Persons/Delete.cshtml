@@ -1,0 +1,18 @@
+@model PROJEKTDB.Models.Person
+
+<h2>Delete Person</h2>
+
+<p>Je i sigurt që do ta fshish këtë person?</p>
+
+<ul>
+    <li><b>ID:</b> @Model.PerId</li>
+    <li><b>Name:</b> @Model.PerEm</li>
+    <li><b>Surname:</b> @Model.PerMb</li>
+    <li><b>Phone:</b> @Model.PerTel</li>
+</ul>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" name="id" value="@Model.PerId" />
+    <button class="btn btn-danger" type="submit">Delete</button>
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+</form>

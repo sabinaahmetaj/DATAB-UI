@@ -1,0 +1,56 @@
+@model IEnumerable<PROJEKTDB.Models.Person>
+
+<div class="card-glass p-4 mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="page-title mb-0">Persons</h2>
+        <a class="btn btn-success" asp-action="Create">
+            ➕ Add Person
+        </a>
+    </div>
+
+    <!-- TABLE WRAPPER -->
+    <div class="table-responsive">
+        <table class="table align-middle table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Date</th>
+                    <th>Zone</th>
+                    <th>Phone</th>
+                    <th class="text-end" style="width:200px;">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.PerId</td>
+                    <td>@p.PerEm</td>
+                    <td>@p.PerMb</td>
+                    <td>@p.PerDat.ToString("dd/MM/yyyy")</td>
+                    <td>@p.PerZon</td>
+                    <td>@p.PerTel</td>
+                    <td class="text-end">
+                        <a class="btn btn-sm btn-outline-warning"
+                           asp-action="Edit"
+                           asp-route-id="@p.PerId">
+                            Edit
+                        </a>
+
+                        <a class="btn btn-sm btn-outline-danger ms-1"
+                           asp-action="Delete"
+                           asp-route-id="@p.PerId">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+@model PROJEKTDB.Models.FatureCreateVM
+
+<h1>Shto Fature</h1>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="FatId" class="form-label"></label>
+        <input asp-for="FatId" class="form-control" />
+        <span asp-validation-for="FatId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Person</label>
+        <select class="form-select" asp-for="PerId" asp-items="ViewBag.Persons">
+            <option value="">-- Zgjidh person --</option>
+        </select>
+        <span asp-validation-for="PerId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Data</label>
+        <input class="form-control" asp-for="FatDat" type="datetime-local" />
+        <span asp-validation-for="FatDat" class="text-danger"></span>
+    </div>
+
+    <hr />
+
+    <div class="mb-3">
+        <label class="form-label">Piktura</label>
+        <select class="form-select" asp-for="PikId" asp-items="ViewBag.Piktures" id="pikSelect">
+            <option value="">-- Zgjidh pikture --</option>
+        </select>
+        <span asp-validation-for="PikId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Sasia</label>
+        <input class="form-control" asp-for="RreSasi" />
+        <span asp-validation-for="RreSasi" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Emri i piktures</label>
+        <input class="form-control" asp-for="PikTit" id="pikTit" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Vlera (cmimi)</label>
+        <input class="form-control" asp-for="PikCmim" id="pikCmim" readonly />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Artisti</label>
+        <input class="form-control" asp-for="ArtistEmri" id="artistEmri" readonly />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const sel = document.getElementById('pikSelect');
+        const tit = document.getElementById('pikTit');
+        const cmim = document.getElementById('pikCmim');
+        const artist = document.getElementById('artistEmri');
+
+        sel.addEventListener('change', async function () {
+            const id = this.value;
+
+            if (!id) {
+                tit.value = '';
+                cmim.value = '';
+                artist.value = '';
+                return;
+            }
+
+            const url = '@Url.Action("GetPiktureInfo", "Fature")' + '?id=' + encodeURIComponent(id);
+            const res = await fetch(url);
+
+            if (!res.ok) {
+                tit.value = '';
+                cmim.value = '';
+                artist.value = '';
+                return;
+            }
+
+            const data = await res.json();
+            tit.value = data.titull ?? '';
+            cmim.value = data.cmim ?? '';
+            artist.value = data.artist ?? '';
+        });
+    </script>
+}

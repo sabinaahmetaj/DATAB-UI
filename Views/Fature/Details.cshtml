@@ -1,0 +1,81 @@
+@model PROJEKTDB.Models.Fature
+@{
+    var rreshtat = ViewBag.Rreshtat as List<PROJEKTDB.Models.Rresht>;
+    decimal total = ViewBag.Total;
+}
+
+<h1>Detajet e Fatures</h1>
+
+<div class="mb-3">
+    <strong>ID:</strong> @Model.FatId <br />
+    <strong>Person:</strong> @Model.Person?.PerEm @Model.Person?.PerMb <br />
+    <strong>Data:</strong> @Model.FatDat
+</div>
+
+<hr />
+
+<div class="d-flex gap-2 mb-3">
+    <a class="btn btn-primary" asp-controller="Rresht" asp-action="Create" asp-route-fatId="@Model.FatId">
+        Shto Rresht
+    </a>
+
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>RreId</th>
+            <th>Pikture</th>
+            <th>Sasi</th>
+            <th>Cmimi</th>
+            <th>Subtotal</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (rreshtat != null)
+        {
+            foreach (var r in rreshtat)
+            {
+                <tr>
+                    <td>@r.RreId</td>
+                    <td>@r.Pikture?.PikTit</td>
+                    <td>@r.RreSasi</td>
+                    <td>@r.RreCmim</td>
+                    <td>@((decimal)r.RreSasi * r.RreCmim)</td>
+                    <td>
+                        <a asp-controller="Rresht" asp-action="Edit"
+   asp-route-fatId="@r.FatId"
+   asp-route-rreId="@r.RreId"
+   class="me-2">Edit</a>
+
+<form asp-controller="Rresht" asp-action="Delete"
+      asp-route-fatId="@r.FatId"
+      asp-route-rreId="@r.RreId"
+      method="post"
+      class="d-inline">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-link p-0 align-baseline"
+            onclick="return confirm('A je i sigurt?');">Delete</button>
+</form>
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+@{
+    decimal totalCalc = 0m;
+
+    if (rreshtat != null)
+    {
+        totalCalc = rreshtat.Sum(x => x.RreCmim * x.RreSasi);
+    }
+}
+
+<h3>TOTAL: @totalCalc</h3>
+
+

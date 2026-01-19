@@ -1,0 +1,20 @@
+@model PROJEKTDB.Models.Fature
+
+<h1>Edit Fature</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="FatId" />
+
+    <div class="mb-3">
+        <label class="form-label">Person</label>
+        <select class="form-select" asp-for="PerId" asp-items="ViewBag.Persons"></select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Data</label>
+        <input class="form-control" asp-for="FatDat" type="datetime-local" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+</form>

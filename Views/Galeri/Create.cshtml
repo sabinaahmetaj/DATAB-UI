@@ -1,0 +1,36 @@
+@model PROJEKTDB.Models.Galeri
+
+<h2>Create Galeri</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="GalId" class="form-label"></label>
+        <input asp-for="GalId" class="form-control" />
+        <span asp-validation-for="GalId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GalMng" class="form-label"></label>
+        <input asp-for="GalMng" class="form-control" />
+        <span asp-validation-for="GalMng" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GalTel" class="form-label"></label>
+        <input asp-for="GalTel" class="form-control" />
+        <span asp-validation-for="GalTel" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="GalZon" class="form-label"></label>
+        <input asp-for="GalZon" class="form-control" />
+        <span asp-validation-for="GalZon" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

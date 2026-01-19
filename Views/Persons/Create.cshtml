@@ -1,0 +1,48 @@
+@model PROJEKTDB.Models.Person
+
+<h2>Create Person</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="PerId" class="form-label"></label>
+        <input asp-for="PerId" class="form-control" />
+        <span asp-validation-for="PerId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PerEm" class="form-label"></label>
+        <input asp-for="PerEm" class="form-control" />
+        <span asp-validation-for="PerEm" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PerMb" class="form-label"></label>
+        <input asp-for="PerMb" class="form-control" />
+        <span asp-validation-for="PerMb" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PerDat" class="form-label"></label>
+        <input asp-for="PerDat" type="date" class="form-control" />
+        <span asp-validation-for="PerDat" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PerZon" class="form-label"></label>
+        <input asp-for="PerZon" class="form-control" />
+        <span asp-validation-for="PerZon" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PerTel" class="form-label"></label>
+        <input asp-for="PerTel" class="form-control" />
+        <span asp-validation-for="PerTel" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-secondary" asp-action="Index">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

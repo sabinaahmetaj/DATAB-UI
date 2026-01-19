@@ -1,0 +1,20 @@
+@model PROJEKTDB.Models.Galeri
+
+<h2>Details</h2>
+
+<dl class="row">
+    <dt class="col-sm-2">ID</dt>
+    <dd class="col-sm-10">@Model.GalId</dd>
+
+    <dt class="col-sm-2">Manager</dt>
+    <dd class="col-sm-10">@Model.GalMng</dd>
+
+    <dt class="col-sm-2">Phone</dt>
+    <dd class="col-sm-10">@Model.GalTel</dd>
+
+    <dt class="col-sm-2">Zone</dt>
+    <dd class="col-sm-10">@Model.GalZon</dd>
+</dl>
+
+<a asp-action="Edit" asp-route-id="@Model.GalId" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

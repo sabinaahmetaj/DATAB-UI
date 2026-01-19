@@ -1,0 +1,28 @@
+@model PROJEKTDB.Models.Rresht
+
+<h1>Edit Rresht</h1>
+
+<form asp-action="Edit" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" asp-for="FatId" />
+    <input type="hidden" asp-for="RreId" />
+
+    <div class="mb-3">
+        <label class="form-label">Pikture</label>
+        <select class="form-select" asp-for="PikId" asp-items="ViewBag.Pikture"></select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Sasi</label>
+        <input class="form-control" asp-for="RreSasi" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Cmim</label>
+        <input class="form-control" asp-for="RreCmim" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Save</button>
+    <a class="btn btn-secondary" asp-action="Index" asp-route-fatId="@Model.FatId">Back</a>
+</form>

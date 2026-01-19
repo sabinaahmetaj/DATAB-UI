@@ -1,0 +1,66 @@
+@model List<PROJEKTDB.Models.Rresht>
+
+<div class="card-glass p-4 mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="page-title mb-0">Rreshtat</h1>
+
+        <a class="btn btn-primary"
+           asp-action="Create"
+           asp-route-fatId="@ViewBag.FatId">
+            ➕ Shto Rresht
+        </a>
+    </div>
+
+    <!-- TABLE WRAPPER -->
+    <div class="table-responsive">
+        <table class="table align-middle table-hover">
+            <thead>
+                <tr>
+                    <th>FAT_ID</th>
+                    <th>RRE_ID</th>
+                    <th>Pikture</th>
+                    <th>Sasi</th>
+                    <th>Cmim</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            @foreach (var r in Model)
+            {
+                <tr>
+                    <td>@r.FatId</td>
+                    <td>@r.RreId</td>
+                    <td>🎨 @r.Pikture?.PikTit</td>
+                    <td>@r.RreSasi</td>
+                    <td><strong>@r.RreCmim</strong></td>
+                    <td class="text-end">
+
+                        <a asp-action="Edit"
+                           asp-route-fatId="@r.FatId"
+                           asp-route-rreId="@r.RreId"
+                           class="btn btn-sm btn-outline-warning">
+                            Edit
+                        </a>
+
+                        <form asp-action="Delete"
+                              asp-route-fatId="@r.FatId"
+                              asp-route-rreId="@r.RreId"
+                              method="post"
+                              class="d-inline ms-1">
+                            @Html.AntiForgeryToken()
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('A je i sigurt qe do ta fshish kete rresht?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

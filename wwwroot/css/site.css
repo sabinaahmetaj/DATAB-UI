@@ -1,0 +1,77 @@
+:root{
+  --bg: #0b1020;
+  --card: rgba(255,255,255,.06);
+  --border: rgba(255,255,255,.12);
+  --text: rgba(255,255,255,.92);
+  --muted: rgba(255,255,255,.65);
+}
+
+body{
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(99,102,241,.35), transparent 60%),
+              radial-gradient(1000px 500px at 90% 10%, rgba(16,185,129,.25), transparent 55%),
+              var(--bg);
+  color: var(--text);
+}
+
+.navbar{
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,.35) !important;
+  border-bottom: 1px solid var(--border);
+}
+
+.container{
+  max-width: 1100px;
+}
+
+.card-glass{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+}
+
+.page-title{
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.text-muted-2{
+  color: var(--muted) !important;
+}
+
+.table{
+  color: var(--text);
+}
+
+.table thead th{
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.table td, .table th{
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.btn{
+  border-radius: 12px;
+}
+
+.form-control, .form-select{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.14);
+  color: var(--text);
+  border-radius: 12px;
+}
+
+.form-control:focus, .form-select:focus{
+  border-color: rgba(99,102,241,.6);
+  box-shadow: 0 0 0 .2rem rgba(99,102,241,.25);
+}
+
+a{
+  color: rgba(165,180,252,.95);
+}
+a:hover{
+  color: rgba(199,210,254,1);
+}
