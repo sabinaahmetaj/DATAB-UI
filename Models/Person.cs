@@ -36,5 +36,11 @@ namespace PROJEKTDB.Models
         [Required]
         [StringLength(12, MinimumLength = 9, ErrorMessage = "Telefoni duhet të ketë 9–12 karaktere.")]
         public string PerTel { get; set; } = string.Empty;
+
+        [Column("PER_ROLE")]
+        [Required]
+        [StringLength(10)]
+        public string PerRole { get; set; } = "CUSTOMER";
+
     }
 }

@@ -1,0 +1,27 @@
+@model PROJEKTDB.Models.Pikture
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details Pikture</h1>
+
+<dl class="row">
+    <dt class="col-sm-2">PikId</dt>
+    <dd class="col-sm-10">@Model.PikId</dd>
+
+    <dt class="col-sm-2">PikTit</dt>
+    <dd class="col-sm-10">@Model.PikTit</dd>
+
+    <dt class="col-sm-2">PikCmim</dt>
+    <dd class="col-sm-10">@Model.PikCmim</dd>
+
+    <dt class="col-sm-2">PerId</dt>
+    <dd class="col-sm-10">@Model.PerId</dd>
+
+    <dt class="col-sm-2">GalId</dt>
+    <dd class="col-sm-10">@Model.GalId</dd>
+</dl>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>
+<a asp-action="Edit" asp-route-id="@Model.PikId" class="btn btn-warning">Edit</a>

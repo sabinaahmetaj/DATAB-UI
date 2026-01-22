@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace PROJEKTDB.Models
 {
@@ -19,9 +20,16 @@ namespace PROJEKTDB.Models
         [Range(1, 255)]
         public byte RreSasi { get; set; } = 1;
 
+        // ====================
         // Vetëm për UI
+        // ====================
+        [BindNever]                 // ❗ mos u valido / mos u lidh nga POST
         public string? PikTit { get; set; }
+
+        [BindNever]
         public decimal PikCmim { get; set; }
+
+        [BindNever]
         public string? ArtistEmri { get; set; }
     }
 }

@@ -28,10 +28,13 @@
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Galeri</label>
-        <select asp-for="GalId" class="form-select" asp-items="ViewBag.Galeris"></select>
-        <span asp-validation-for="GalId" class="text-danger"></span>
-    </div>
+    <label class="form-label">Galeri</label>
+    <select asp-for="GalId" class="form-select" asp-items="ViewBag.Galeris">
+        <option value="">-- Zgjidh Galeri --</option>
+    </select>
+    <span asp-validation-for="GalId" class="text-danger"></span>
+</div>
+
 
     <button class="btn btn-primary" type="submit">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Back</a>

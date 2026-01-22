@@ -13,6 +13,12 @@ namespace PROJEKTDB.Models
         [RegularExpression(@"^\d{3}$", ErrorMessage = "GAL_ID duhet të ketë 3 shifra (p.sh. 001).")]
         public string GalId { get; set; } = string.Empty;
 
+        [Column("GAL_EM")]
+[Required]
+[StringLength(50)]
+public string GalEm { get; set; } = "";
+
+
         [Column("GAL_MNG")]
         [Required]
         [StringLength(25)]

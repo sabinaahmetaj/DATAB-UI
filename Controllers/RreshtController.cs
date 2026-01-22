@@ -14,7 +14,35 @@ namespace PROJEKTDB.Controllers
         {
             _context = context;
         }
+        private bool IsAdmin() => HttpContext.Session.GetString("PerRole") == "ADMIN";
+private bool IsManager() => HttpContext.Session.GetString("PerRole") == "MANAGER";
+private bool IsAdminOrManager() => IsAdmin() || IsManager();
 
+
+        // =========================
+        // Helpers: Dropdowns
+        // =========================
+        private async Task LoadDropdowns(int? selectedFatId = null, string? selectedPikId = null)
+        {
+            // Fature dropdown (nëse e përdor në view)
+            var fatureList = await _context.Fature
+                .OrderByDescending(f => f.FatDat)
+                .Select(f => new { f.FatId })
+                .ToListAsync();
+
+            ViewBag.Fature = new SelectList(fatureList, "FatId", "FatId", selectedFatId);
+
+            // Pikture dropdown
+            var piktureList = await _context.Piktures
+                .OrderBy(p => p.PikTit)
+                .Select(p => new { p.PikId, p.PikTit })
+                .ToListAsync();
+
+            // ✅ Emri i saktë i fushës: PikTit (jo PikTitull)
+            ViewBag.Piktures = new SelectList(piktureList, "PikId", "PikTit", selectedPikId);
+        }
+
+        // ================= INDEX =================
         // /Rresht?fatId=111111
         public async Task<IActionResult> Index(int? fatId)
         {
@@ -35,18 +63,11 @@ namespace PROJEKTDB.Controllers
             return View(list);
         }
 
+        // ================= CREATE (GET) =================
         // GET: /Rresht/Create?fatId=111111
         public async Task<IActionResult> Create(int? fatId)
         {
-            ViewBag.Fature = new SelectList(
-                await _context.Fature.OrderByDescending(f => f.FatDat).ToListAsync(),
-                "FatId", "FatId", fatId
-            );
-
-            ViewBag.Pikture = new SelectList(
-                await _context.Piktures.OrderBy(p => p.PikTit).ToListAsync(),
-                "PikId", "PikTit"
-            );
+            await LoadDropdowns(fatId, null);
 
             var model = new Rresht();
             if (fatId.HasValue) model.FatId = fatId.Value;
@@ -54,81 +75,84 @@ namespace PROJEKTDB.Controllers
             return View(model);
         }
 
-        // POST: /Rresht/Create
-       [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(Rresht rresht)
-{
-    // dropdowns / data që duhet në View kur ka error:
-    async Task LoadDropdowns()
-    {
-        ViewBag.Fature = new SelectList(await _context.Fature.ToListAsync(), "FatId", "FatId", rresht.FatId);
-        ViewBag.Pikture = new SelectList(await _context.Piktures.ToListAsync(), "PikId", "PikTitull", rresht.PikId);
-    }
+        // ================= CREATE (POST) =================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(Rresht rresht)
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadDropdowns(rresht.FatId, rresht.PikId);
+                return View(rresht);
+            }
 
-    if (!ModelState.IsValid)
-    {
-        await LoadDropdowns();
-        return View(rresht);
-    }
+            // nëse s’është dhënë RreId, gjeneroje automatikisht
+            if (rresht.RreId == 0)
+            {
+                var maxRreId = await _context.Rresht
+                    .Where(x => x.FatId == rresht.FatId)
+                    .Select(x => (byte?)x.RreId)
+                    .MaxAsync();
 
-    // nëse s’është dhënë RreId, gjeneroje automatikisht (tinyint -> byte)
-    if (rresht.RreId == 0)
-    {
-        var maxRreId = await _context.Rresht
-            .Where(x => x.FatId == rresht.FatId)
-            .Select(x => (byte?)x.RreId)
-            .MaxAsync();
+                rresht.RreId = (byte)((maxRreId ?? 0) + 1);
+            }
 
-        var next = (byte)((maxRreId ?? 0) + 1);
-        rresht.RreId = next;
-    }
+            // Sigurohu që s’po shton PK të dyfishtë
+            var exists = await _context.Rresht.AnyAsync(x => x.FatId == rresht.FatId && x.RreId == rresht.RreId);
+            if (exists)
+            {
+                ModelState.AddModelError("", "Ky rresht ekziston (FAT_ID + RRE_ID). Provo përsëri.");
+                await LoadDropdowns(rresht.FatId, rresht.PikId);
+                return View(rresht);
+            }
 
-    _context.Add(rresht);
-    await _context.SaveChangesAsync();
+            _context.Rresht.Add(rresht);
+            await _context.SaveChangesAsync();
 
-    // kthehu te lista e rreshtave të asaj fature
-    return RedirectToAction(nameof(Index), new { fatId = rresht.FatId });
-}
+            return RedirectToAction(nameof(Index), new { fatId = rresht.FatId });
+        }
 
-
-        
-
+        // ================= EDIT (GET) =================
         // GET: /Rresht/Edit?fatId=111111&rreId=1
-// GET: /Rresht/Edit?fatId=...&rreId=...
-public async Task<IActionResult> Edit(int fatId, byte rreId)
-{
-    var rresht = await _context.Rresht.FindAsync(fatId, rreId);
-    if (rresht == null) return NotFound();
+        public async Task<IActionResult> Edit(int fatId, byte rreId)
+        {
+            var rresht = await _context.Rresht.FindAsync(fatId, rreId);
+            if (rresht == null) return NotFound();
 
-    // (nese ke dropdowns, mbushi ketu)
-     ViewBag.Piktures = new SelectList(_context.Piktures, "PikId", "PikTit", rresht.PikId);
+            await LoadDropdowns(rresht.FatId, rresht.PikId);
+            return View(rresht);
+        }
 
-    return View(rresht);
-}
+        // ================= EDIT (POST) =================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int fatId, byte rreId, Rresht rresht)
+        {
+            if (fatId != rresht.FatId || rreId != rresht.RreId)
+                return BadRequest();
 
+            if (!ModelState.IsValid)
+            {
+                await LoadDropdowns(rresht.FatId, rresht.PikId);
+                return View(rresht);
+            }
 
+            try
+            {
+                _context.Update(rresht);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                ModelState.AddModelError("", "Gabim gjatë ruajtjes në DB: " + ex.Message);
+                await LoadDropdowns(rresht.FatId, rresht.PikId);
+                return View(rresht);
+            }
 
-        // POST: /Rresht/Edit
-       [HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Edit(int fatId, byte rreId, Rresht rresht)
-{
-    if (fatId != rresht.FatId || rreId != rresht.RreId) return NotFound();
+            return RedirectToAction(nameof(Index), new { fatId = fatId });
+        }
 
-    if (!ModelState.IsValid)
-    {
-        // rimbushe dropdowns nese i ke
-        return View(rresht);
-    }
-
-    _context.Update(rresht);
-    await _context.SaveChangesAsync();
-    return RedirectToAction(nameof(Index), new { fatId = fatId });
-}
-
-
-        // POST: /Rresht/Delete
+        // ================= DELETE =================
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int fatId, byte rreId)

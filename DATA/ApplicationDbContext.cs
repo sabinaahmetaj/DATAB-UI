@@ -33,6 +33,14 @@ namespace PROJEKTDB.Data
                 .HasForeignKey(p => p.GalId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+                 // ✅ PIKTURE ka trigger => mos përdor OUTPUT clause
+    modelBuilder.Entity<Pikture>()
+        .ToTable("PIKTURE", tb =>
+        {
+            tb.HasTrigger("trg_Pikture_SavePriceHistory");
+            tb.UseSqlOutputClause(false);
+        });
+
             /* ===== FATURE ===== */
             modelBuilder.Entity<Fature>()
                 .HasOne(f => f.Person)

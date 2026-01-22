@@ -1,10 +1,12 @@
-:root{
+:root{ 
   --bg: #0b1020;
   --card: rgba(255,255,255,.06);
   --border: rgba(255,255,255,.12);
   --text: rgba(255,255,255,.92);
   --muted: rgba(255,255,255,.65);
 }
+
+html, body { height: 100%; }
 
 body{
   background: radial-gradient(1200px 600px at 20% -10%, rgba(99,102,241,.35), transparent 60%),
@@ -13,10 +15,21 @@ body{
   color: var(--text);
 }
 
+/* NAVBAR: hiq vijat + mos lejo overlay klikimesh */
 .navbar{
   backdrop-filter: blur(10px);
   background: rgba(0,0,0,.35) !important;
-  border-bottom: 1px solid var(--border);
+  border-bottom: none !important;   /* HIQ VIJËN */
+  box-shadow: none !important;      /* HIQ HIJEN që duket si vijë */
+}
+
+/* link-et në navbar (se ke background të errët) */
+.navbar .navbar-brand,
+.navbar .nav-link{
+  color: var(--text) !important;
+}
+.navbar .nav-link:hover{
+  color: rgba(199,210,254,1) !important;
 }
 
 .container{
@@ -39,23 +52,22 @@ body{
   color: var(--muted) !important;
 }
 
+/* TABLE: hiq vijat horizontale */
 .table{
   color: var(--text);
+  border-color: transparent !important;
 }
-
 .table thead th{
-  border-bottom: 1px solid var(--border);
+  border-bottom: none !important; /* HIQ VIJËN */
   color: var(--muted);
   font-weight: 700;
 }
-
 .table td, .table th{
-  border-top: 1px solid rgba(255,255,255,.08);
+  border-top: none !important;    /* HIQ VIJËT */
 }
 
-.btn{
-  border-radius: 12px;
-}
+/* forma */
+.btn{ border-radius: 12px; }
 
 .form-control, .form-select{
   background: rgba(255,255,255,.06);
@@ -74,4 +86,36 @@ a{
 }
 a:hover{
   color: rgba(199,210,254,1);
+}
+
+/* FOOTER: hiq vijën + mos mbulo asnjë input */
+.footer{
+  position: static !important;    /* nëse diku bëhet fixed */
+  width: 100%;
+  border-top: none !important;    /* HIQ VIJËN */
+  box-shadow: none !important;
+  background: transparent !important;
+  z-index: 0 !important;
+}
+
+/* Siguri: edhe nëse ndonjë CSS tjetër e bën fixed, të mos bllokojë klikimin */
+footer{
+  pointer-events: none;
+}
+footer a{
+  pointer-events: auto;
+}
+
+/* Jep pak hapësirë poshtë formave që janë shumë poshtë */
+main{
+  padding-bottom: 3rem;
+}
+
+/* FIX: inputet readonly/disabled në dark theme */
+.form-control[readonly],
+.form-control:disabled,
+.form-select:disabled {
+  background: rgba(255,255,255,.08) !important;
+  color: rgba(255,255,255,.92) !important;
+  opacity: 1 !important;
 }

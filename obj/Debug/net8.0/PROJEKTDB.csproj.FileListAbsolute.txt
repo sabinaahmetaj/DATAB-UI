@@ -134,3 +134,4 @@ C:\DBINTERFACE\PROJEKTDB\obj\Debug\net8.0\refint\PROJEKTDB.dll
 C:\DBINTERFACE\PROJEKTDB\obj\Debug\net8.0\PROJEKTDB.pdb
 C:\DBINTERFACE\PROJEKTDB\obj\Debug\net8.0\PROJEKTDB.genruntimeconfig.cache
 C:\DBINTERFACE\PROJEKTDB\obj\Debug\net8.0\ref\PROJEKTDB.dll
+C:\DBINTERFACE\PROJEKTDB\obj\Debug\net8.0\PROJEKTDB.sourcelink.json

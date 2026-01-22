@@ -45,11 +45,8 @@
                     </td>
 
                     <td class="text-end">
-                        <a class="btn btn-sm btn-outline-info"
-                           asp-action="Details"
-                           asp-route-id="@item.PikId">
-                            Details
-                        </a>
+                        <a asp-action="Details" asp-route-id="@item.PikId" class="btn btn-info">Details</a>
+
 
                         <a class="btn btn-sm btn-outline-warning ms-1"
                            asp-action="Edit"

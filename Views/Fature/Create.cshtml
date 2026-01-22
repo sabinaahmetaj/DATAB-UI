@@ -1,4 +1,6 @@
 @model PROJEKTDB.Models.FatureCreateVM
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using System.Linq
 
 <h1>Shto Fature</h1>
 
@@ -13,7 +15,9 @@
 
     <div class="mb-3">
         <label class="form-label">Person</label>
-        <select class="form-select" asp-for="PerId" asp-items="ViewBag.Persons">
+        <select class="form-select"
+                asp-for="PerId"
+                asp-items="(IEnumerable<SelectListItem>)ViewBag.Persons ?? Enumerable.Empty<SelectListItem>()">
             <option value="">-- Zgjidh person --</option>
         </select>
         <span asp-validation-for="PerId" class="text-danger"></span>
@@ -21,7 +25,8 @@
 
     <div class="mb-3">
         <label class="form-label">Data</label>
-        <input class="form-control" asp-for="FatDat" type="datetime-local" />
+        <input class="form-control" asp-for="FatDat" type="datetime-local"
+               value="@Model.FatDat.ToString("yyyy-MM-ddTHH:mm")" />
         <span asp-validation-for="FatDat" class="text-danger"></span>
     </div>
 
@@ -29,7 +34,10 @@
 
     <div class="mb-3">
         <label class="form-label">Piktura</label>
-        <select class="form-select" asp-for="PikId" asp-items="ViewBag.Piktures" id="pikSelect">
+        <select class="form-select"
+                asp-for="PikId"
+                asp-items="(IEnumerable<SelectListItem>)ViewBag.Piktures ?? Enumerable.Empty<SelectListItem>()"
+                id="pikSelect">
             <option value="">-- Zgjidh pikture --</option>
         </select>
         <span asp-validation-for="PikId" class="text-danger"></span>
@@ -39,11 +47,6 @@
         <label class="form-label">Sasia</label>
         <input class="form-control" asp-for="RreSasi" />
         <span asp-validation-for="RreSasi" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Emri i piktures</label>
-        <input class="form-control" asp-for="PikTit" id="pikTit" readonly />
     </div>
 
     <div class="mb-3">
@@ -64,35 +67,39 @@
     <partial name="_ValidationScriptsPartial" />
 
     <script>
-        const sel = document.getElementById('pikSelect');
-        const tit = document.getElementById('pikTit');
-        const cmim = document.getElementById('pikCmim');
-        const artist = document.getElementById('artistEmri');
+        document.addEventListener('DOMContentLoaded', function () {
+            const sel = document.getElementById('pikSelect');
+            const cmim = document.getElementById('pikCmim');
+            const artist = document.getElementById('artistEmri');
 
-        sel.addEventListener('change', async function () {
-            const id = this.value;
+            if (!sel) return;
 
-            if (!id) {
-                tit.value = '';
-                cmim.value = '';
-                artist.value = '';
-                return;
+            async function loadInfo() {
+                const id = sel.value;
+
+                if (!id) {
+                    if (cmim) cmim.value = '';
+                    if (artist) artist.value = '';
+                    return;
+                }
+
+                const url = '@Url.Action("GetPiktureInfo", "Fature")' + '?id=' + encodeURIComponent(id);
+                const res = await fetch(url);
+
+                if (!res.ok) {
+                    if (cmim) cmim.value = '';
+                    if (artist) artist.value = '';
+                    return;
+                }
+
+                const data = await res.json();
+                const price = data.cmim ?? 0;
+                if (cmim) cmim.value = Number(price).toFixed(2);
+                if (artist) artist.value = data.artist ?? '';
             }
 
-            const url = '@Url.Action("GetPiktureInfo", "Fature")' + '?id=' + encodeURIComponent(id);
-            const res = await fetch(url);
-
-            if (!res.ok) {
-                tit.value = '';
-                cmim.value = '';
-                artist.value = '';
-                return;
-            }
-
-            const data = await res.json();
-            tit.value = data.titull ?? '';
-            cmim.value = data.cmim ?? '';
-            artist.value = data.artist ?? '';
+            sel.addEventListener('change', loadInfo);
+            loadInfo();
         });
     </script>
 }

@@ -39,6 +39,17 @@
         <span asp-validation-for="PerTel" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label asp-for="PerRole" class="form-label">Role</label>
+        <select asp-for="PerRole" class="form-select">
+            <option value="CUSTOMER">Customer</option>
+            <option value="ARTIST">Artist</option>
+            <option value="MANAGER">Manager</option>
+            <option value="ADMIN">Admin</option>
+        </select>
+        <span asp-validation-for="PerRole" class="text-danger"></span>
+    </div>
+
     <button class="btn btn-primary" type="submit">Save</button>
     <a class="btn btn-secondary" asp-action="Index">Back</a>
 </form>

@@ -90,6 +90,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlrdHVyZVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/DBINTERFACE/PROJEKTDB/Views/Pikture/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlrdHVyZVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/DBINTERFACE/PROJEKTDB/Views/Pikture/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlrdHVyZVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

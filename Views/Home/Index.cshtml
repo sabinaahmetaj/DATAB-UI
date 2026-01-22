@@ -1,52 +1,179 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Http
+@using PROJEKTDB.Models
+@model ArtistDashboardVM
+
+@{
     ViewData["Title"] = "Dashboard";
+    var role = Context.Session.GetString("PerRole");
 }
 
 <div class="card-glass p-4 p-md-5 mt-4">
     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
         <div>
-            <h1 class="page-title mb-1">Admin Dashboard</h1>
-            <div class="text-muted-2">Zgjidh një modul për të menaxhuar të dhënat.</div>
+            @if (role == "ADMIN")
+            {
+                <h1 class="page-title mb-1">Admin Dashboard</h1>
+                <div class="text-muted-2">Zgjidh një modul për të menaxhuar të dhënat.</div>
+            }
+            else if (role == "MANAGER")
+            {
+                <h1 class="page-title mb-1">Manager Dashboard</h1>
+                <div class="text-muted-2">Menaxho shitjet dhe inventarin.</div>
+            }
+            else if (role == "ARTIST")
+            {
+                <h1 class="page-title mb-1">Artist Dashboard</h1>
+                <div class="text-muted-2">Gjendja e pikturave dhe xhiroja totale.</div>
+            }
+            else
+            {
+                <h1 class="page-title mb-1">Dashboard</h1>
+                <div class="text-muted-2">Mirësevini.</div>
+            }
         </div>
+
         <a class="btn btn-outline-light" asp-controller="Account" asp-action="Logout">Logout</a>
     </div>
 
     <hr class="my-4" style="border-color: rgba(255,255,255,.12);" />
 
-    <div class="row g-3">
-        <div class="col-md-4">
-            <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Persons" asp-action="Index">
-                <div class="fw-bold fs-5">👤 Person</div>
-                <div class="text-muted-2 mt-1">Menaxho personat / artistët</div>
-            </a>
-        </div>
+    @* =========================
+       ADMIN VIEW
+       ========================= *@
+    @if (role == "ADMIN")
+    {
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Persons" asp-action="Index">
+                    <div class="fw-bold fs-5">👤 User</div>
+                    <div class="text-muted-2 mt-1">Menaxho user-at (artist / customer)</div>
+                </a>
+            </div>
 
-        <div class="col-md-4">
-            <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Galeri" asp-action="Index">
-                <div class="fw-bold fs-5">🖼️ Galeri</div>
-                <div class="text-muted-2 mt-1">Menaxho galeritë</div>
-            </a>
-        </div>
+            <div class="col-md-4">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Galeri" asp-action="Index">
+                    <div class="fw-bold fs-5">🖼️ Galeri</div>
+                    <div class="text-muted-2 mt-1">Menaxho galeritë</div>
+                </a>
+            </div>
 
-        <div class="col-md-4">
-            <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Pikture" asp-action="Index">
-                <div class="fw-bold fs-5">🎨 Pikture</div>
-                <div class="text-muted-2 mt-1">Menaxho pikturat</div>
-            </a>
-        </div>
+            <div class="col-md-4">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Pikture" asp-action="Index">
+                    <div class="fw-bold fs-5">🎨 Pikture</div>
+                    <div class="text-muted-2 mt-1">Menaxho pikturat</div>
+                </a>
+            </div>
 
-        <div class="col-md-6">
-            <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Fature" asp-action="Index">
-                <div class="fw-bold fs-5">🧾 Fature</div>
-                <div class="text-muted-2 mt-1">Krijo dhe shiko faturat</div>
-            </a>
-        </div>
+            <div class="col-md-6">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Fature" asp-action="Index">
+                    <div class="fw-bold fs-5">🧾 Fature</div>
+                    <div class="text-muted-2 mt-1">Krijo dhe shiko faturat</div>
+                </a>
+            </div>
 
-        <div class="col-md-6">
-            <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Rresht" asp-action="Index">
-                <div class="fw-bold fs-5">📄 Rresht</div>
-                <div class="text-muted-2 mt-1">Detajet e faturave</div>
-            </a>
+            <div class="col-md-6">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Rresht" asp-action="Index">
+                    <div class="fw-bold fs-5">📄 Rresht</div>
+                    <div class="text-muted-2 mt-1">Detajet e faturave</div>
+                </a>
+            </div>
         </div>
-    </div>
+    }
+    @* =========================
+       MANAGER VIEW
+       ========================= *@
+    else if (role == "MANAGER")
+    {
+        <div class="row g-3">
+            <div class="col-md-6">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Fature" asp-action="Index">
+                    <div class="fw-bold fs-5">🧾 Fature</div>
+                    <div class="text-muted-2 mt-1">Krijo / shiko faturat</div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Rresht" asp-action="Index">
+                    <div class="fw-bold fs-5">📄 Rresht</div>
+                    <div class="text-muted-2 mt-1">Detajet e faturave</div>
+                </a>
+            </div>
+
+            <div class="col-md-6">
+                <a class="card-glass d-block p-4 text-decoration-none" asp-controller="Pikture" asp-action="Index">
+                    <div class="fw-bold fs-5">🎨 Pikture</div>
+                    <div class="text-muted-2 mt-1">Shiko / përditëso pikturat</div>
+                </a>
+            </div>
+        </div>
+    }
+    @* =========================
+       ARTIST VIEW (xhiro + tabela)
+       ========================= *@
+    else if (role == "ARTIST")
+    {
+        if (Model == null)
+        {
+            <div class="alert alert-warning mt-3">
+                Nuk u gjetën të dhëna për artistin. Ju lutem dilni dhe hyni përsëri.
+            </div>
+        }
+        else
+        {
+            var rows = Model.Pikturat ?? new List<ArtistPiktureRowVM>();
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="card-glass p-4">
+                        <div class="text-muted-2">Xhiro totale</div>
+                        <div class="fw-bold fs-3 mt-1">@Model.TotalXhiro.ToString("0.00") €</div>
+                        <div class="text-muted-2 mt-2">Artist: @Model.ArtistEmri (@Model.PerId)</div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card-glass p-4">
+                        <div class="fw-bold fs-5 mb-3">Gjendja e Pikturave</div>
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>PIK_ID</th>
+                                    <th>Titulli</th>
+                                    <th>Çmimi</th>
+                                    <th>Sasi e shitur</th>
+                                    <th>Xhiro</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in rows)
+                                {
+                                    <tr>
+                                        <td>@p.PikId</td>
+                                        <td>@p.PikTit</td>
+                                        <td>@p.PikCmim.ToString("0.00") €</td>
+                                        <td>@p.ShiturSasi</td>
+                                        <td>@p.Xhiro.ToString("0.00") €</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @if (rows.Count == 0)
+                        {
+                            <div class="text-muted-2 mt-3">
+                                Nuk ka piktura të regjistruara për këtë artist.
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info mt-3">
+            Ju lutem bëni login.
+        </div>
+    }
 </div>
