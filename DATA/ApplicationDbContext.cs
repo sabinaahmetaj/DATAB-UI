@@ -19,6 +19,9 @@ namespace PROJEKTDB.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Rresht>()
+    .HasKey(r => new { r.FatId, r.RreId });
+
 
             /* ===== PIKTURE ===== */
             modelBuilder.Entity<Pikture>()

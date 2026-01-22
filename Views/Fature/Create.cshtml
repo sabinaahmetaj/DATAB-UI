@@ -7,11 +7,7 @@
 <form asp-action="Create" method="post">
     @Html.AntiForgeryToken()
 
-    <div class="mb-3">
-        <label asp-for="FatId" class="form-label"></label>
-        <input asp-for="FatId" class="form-control" />
-        <span asp-validation-for="FatId" class="text-danger"></span>
-    </div>
+   
 
     <div class="mb-3">
         <label class="form-label">Person</label>
@@ -23,12 +19,7 @@
         <span asp-validation-for="PerId" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Data</label>
-        <input class="form-control" asp-for="FatDat" type="datetime-local"
-               value="@Model.FatDat.ToString("yyyy-MM-ddTHH:mm")" />
-        <span asp-validation-for="FatDat" class="text-danger"></span>
-    </div>
+    
 
     <hr />
 

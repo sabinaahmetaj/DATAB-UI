@@ -36,16 +36,21 @@ namespace PROJEKTDB.Controllers
             if (password == "123")
             {
                 var user = _db.Persons.FirstOrDefault(p =>
-                    p.PerEm == username &&
-                    (p.PerRole == "ARTIST" || p.PerRole == "MANAGER")
-                );
+    p.PerEm == username &&
+    (p.PerRole == "ARTIST" || p.PerRole == "MANAGER" || p.PerRole == "CUSTOMER")
+);
+
 
                 if (user != null)
                 {
                     HttpContext.Session.SetString("PerId", user.PerId);
                     HttpContext.Session.SetString("PerRole", user.PerRole);
                     HttpContext.Session.SetString("PerEm", user.PerEm);
-                    return RedirectToAction("Index", "Home");
+                    if (user.PerRole == "CUSTOMER")
+    return RedirectToAction("MyInvoices", "Fature");
+
+return RedirectToAction("Index", "Home");
+
                 }
 
                 ViewBag.Error = "Nuk ekziston asnjë ARTIST/MANAGER me këtë emër.";

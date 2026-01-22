@@ -7,9 +7,6 @@ namespace PROJEKTDB.Models
     public class FatureCreateVM
     {
         [Required]
-        public int FatId { get; set; }
-
-        [Required]
         public string PerId { get; set; } = string.Empty;
 
         public DateTime FatDat { get; set; } = DateTime.Now;
@@ -21,9 +18,9 @@ namespace PROJEKTDB.Models
         public byte RreSasi { get; set; } = 1;
 
         // ====================
-        // Vetëm për UI
+        // Vetëm për UI (mos u bindo / mos u valido nga POST)
         // ====================
-        [BindNever]                 // ❗ mos u valido / mos u lidh nga POST
+        [BindNever]
         public string? PikTit { get; set; }
 
         [BindNever]

@@ -1,11 +1,14 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;              // ✅ SHTO KËTË
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PROJEKTDB.Data;
 using PROJEKTDB.Models;
+using PROJEKTDB.Services;
+
 
 namespace PROJEKTDB.Controllers
 {
@@ -21,6 +24,9 @@ namespace PROJEKTDB.Controllers
         private bool IsAdmin() => HttpContext.Session.GetString("PerRole") == "ADMIN";
         private bool IsManager() => HttpContext.Session.GetString("PerRole") == "MANAGER";
         private bool IsAdminOrManager() => IsAdmin() || IsManager();
+        private bool IsCustomer() => HttpContext.Session.GetString("PerRole") == "CUSTOMER";
+private string? CurrentPerId() => HttpContext.Session.GetString("PerId");
+
 
         /* ================= INDEX ================= */
         public async Task<IActionResult> Index()
@@ -37,6 +43,28 @@ namespace PROJEKTDB.Controllers
 
             return View(list);
         }
+
+        public async Task<IActionResult> MyInvoices()
+{
+    if (!IsCustomer())
+        return RedirectToAction("Index", "Home");
+
+    var perId = CurrentPerId();
+    if (string.IsNullOrWhiteSpace(perId))
+        return RedirectToAction("Login", "Account");
+
+    var list = await _context.Fature
+        .Where(f => f.PerId == perId)
+        .Include(f => f.Person)
+        .Include(f => f.Rresht)
+            .ThenInclude(r => r.Pikture)
+        .OrderByDescending(f => f.FatDat)
+        .AsNoTracking()
+        .ToListAsync();
+
+    return View(list);
+}
+
 
         /* ================= helpers (dropdowns) ================= */
         private async Task LoadCreateDropdowns(string? selectedPerId = null, string? selectedPikId = null)
@@ -97,7 +125,9 @@ namespace PROJEKTDB.Controllers
             }
 
             // ✅ kontrollo që personi i zgjedhur të jetë CUSTOMER
-            var isCustomer = await _context.Persons.AnyAsync(p => p.PerId == vm.PerId && p.PerRole == "CUSTOMER");
+            var isCustomer = await _context.Persons
+                .AnyAsync(p => p.PerId == vm.PerId && p.PerRole == "CUSTOMER");
+
             if (!isCustomer)
             {
                 ModelState.AddModelError(nameof(vm.PerId), "Duhet të zgjedhësh vetëm klient (CUSTOMER).");
@@ -105,16 +135,7 @@ namespace PROJEKTDB.Controllers
                 return View(vm);
             }
 
-            // 1) krijo FATURE
-            var fature = new Fature
-            {
-                FatId = vm.FatId,
-                PerId = vm.PerId,
-                FatDat = vm.FatDat == default ? DateTime.Now : vm.FatDat
-            };
-            _context.Fature.Add(fature);
-
-            // 2) merr pikturën (vetëm çmimin)
+            // 1) merr pikturën (çmimi merret nga DB)
             var pikture = await _context.Piktures
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.PikId == vm.PikId);
@@ -126,20 +147,49 @@ namespace PROJEKTDB.Controllers
                 return View(vm);
             }
 
-            // 3) krijo RRESHT (rreshti i parë)
-            var rresht = new Rresht
-            {
-                FatId = vm.FatId,
-                RreId = 1,
-                PikId = pikture.PikId,
-                RreSasi = vm.RreSasi,
-                RreCmim = pikture.PikCmim // ✅ çmimi automatik nga piktura
-            };
-            _context.Rresht.Add(rresht);
+            // 2) krijo FATURE (PA FatId sepse është IDENTITY)
+    // 2) krijo FATURE (PA FatId sepse është IDENTITY)
+var fature = new Fature
+{
+    PerId = vm.PerId,
+    FatDat = vm.FatDat == default ? DateTime.Now : vm.FatDat
+};
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+// ✅ TRANSACTION: mos të prishet logjika, por të mos mbetet fatura pa rresht
+await using var tx = await _context.Database.BeginTransactionAsync();
+
+try
+{
+    _context.Fature.Add(fature);
+
+    // ✅ SaveChanges #1 -> DB gjeneron FatId
+    await _context.SaveChangesAsync();
+
+    // 3) krijo RRESHT (rreshti i parë) me FatId të gjeneruar
+    var rresht = new Rresht
+    {
+        FatId = fature.FatId,      // ✅ ID i gjeneruar
+        RreId = 1,
+        PikId = pikture.PikId,
+        RreSasi = vm.RreSasi,
+        RreCmim = pikture.PikCmim  // ✅ çmimi automatik nga piktura
+    };
+
+    _context.Rresht.Add(rresht);
+
+    // ✅ SaveChanges #2 -> ruan rreshtin
+    await _context.SaveChangesAsync();
+
+    await tx.CommitAsync();
+    return RedirectToAction(nameof(Index));
+}
+catch
+{
+    await tx.RollbackAsync();
+    throw; // e lë error-in të shfaqet siç e menaxhon aplikacioni yt
+}
+}
+
 
         /* ================= AJAX: INFO PIKTURE ================= */
         [HttpGet]
@@ -195,6 +245,63 @@ namespace PROJEKTDB.Controllers
             return View(fature);
         }
 
+public async Task<IActionResult> DetailsCustomer(int id)
+{
+    if (!IsCustomer())
+        return RedirectToAction("Index", "Home");
+
+    var perId = CurrentPerId();
+    if (string.IsNullOrWhiteSpace(perId))
+        return RedirectToAction("Login", "Account");
+
+    var fature = await _context.Fature
+        .Include(f => f.Person)
+        .Include(f => f.Rresht)
+            .ThenInclude(r => r.Pikture)
+        .AsNoTracking()
+        .FirstOrDefaultAsync(f => f.FatId == id && f.PerId == perId);
+
+    if (fature == null) return NotFound();
+
+    // total për view
+    ViewBag.Total = fature.Rresht.Sum(r => (decimal)r.RreSasi * r.RreCmim);
+
+    return View("Invoice", fature); // ✅ view e re “Invoice.cshtml” që duket si faturë reale
+}
+
+[HttpGet]
+public async Task<IActionResult> Pdf(int id)
+{
+    // Admin/Manager lejohet
+    // Customer lejohet vetëm për faturat e veta
+    var role = HttpContext.Session.GetString("PerRole");
+    var perId = HttpContext.Session.GetString("PerId");
+
+    if (role != "ADMIN" && role != "MANAGER" && role != "CUSTOMER")
+        return RedirectToAction("Index", "Home");
+
+    var query = _context.Fature
+        .Include(f => f.Person)
+        .Include(f => f.Rresht)
+            .ThenInclude(r => r.Pikture)
+        .AsQueryable();
+
+    if (role == "CUSTOMER")
+    {
+        if (string.IsNullOrWhiteSpace(perId))
+            return RedirectToAction("Login", "Account");
+
+        query = query.Where(f => f.PerId == perId);
+    }
+
+    var fature = await query.FirstOrDefaultAsync(f => f.FatId == id);
+    if (fature == null) return NotFound();
+
+    var bytes = InvoicePdfService.Generate(fature);
+    return File(bytes, "application/pdf", $"Fature_{fature.FatId}.pdf");
+}
+
+
         /* ================= DELETE ================= */
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -220,7 +327,7 @@ namespace PROJEKTDB.Controllers
                 return RedirectToAction("Index", "Home");
 
             var fature = await _context.Fature.FindAsync(id);
-            if (fature == null) return NotFound(); // ✅ kjo heq CS8602
+            if (fature == null) return NotFound();
 
             var customers = await _context.Persons
                 .Where(p => p.PerRole == "CUSTOMER")

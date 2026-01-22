@@ -42,6 +42,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmF0dXJlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/DBINTERFACE/PROJEKTDB/Views/Fature/Invoice.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmF0dXJlXEludm9pY2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/DBINTERFACE/PROJEKTDB/Views/Fature/MyInvoices.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRmF0dXJlXE15SW52b2ljZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/DBINTERFACE/PROJEKTDB/Views/Galeri/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcR2FsZXJpXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

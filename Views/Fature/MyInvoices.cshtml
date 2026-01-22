@@ -1,0 +1,29 @@
+@model List<PROJEKTDB.Models.Fature>
+
+<h1>Faturat e mia</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nr</th>
+            <th>Data</th>
+            <th>Total</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var f in Model)
+    {
+        var total = f.Rresht.Sum(r => (decimal)r.RreSasi * r.RreCmim);
+        <tr>
+            <td>#@f.FatId</td>
+            <td>@f.FatDat.ToString("dd/MM/yyyy HH:mm")</td>
+            <td>@total.ToString("0.00") €</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-action="DetailsCustomer" asp-route-id="@f.FatId">Hap</a>
+                <a class="btn btn-sm btn-danger" asp-action="Pdf" asp-route-id="@f.FatId">PDF</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

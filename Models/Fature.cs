@@ -8,10 +8,11 @@ namespace PROJEKTDB.Models
     [Table("FATURE")]
     public class Fature
     {
-        [Key]
-        [Column("FAT_ID")]
-        [Range(1, int.MaxValue, ErrorMessage = "FAT_ID duhet të jetë > 0.")]
-        public int FatId { get; set; }
+       [Key]
+[Column("FAT_ID")]
+[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+public int FatId { get; set; }
+
 
         [Column("PER_ID")]
         [Required]

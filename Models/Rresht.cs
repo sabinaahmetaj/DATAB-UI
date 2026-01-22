@@ -10,6 +10,7 @@ namespace PROJEKTDB.Models
         public int FatId { get; set; }
 
         [Column("RRE_ID")]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)] // ✅ manual (1,2,3...)
         public byte RreId { get; set; }
 
         [Column("PIK_ID")]
@@ -26,10 +27,7 @@ namespace PROJEKTDB.Models
         public decimal RreCmim { get; set; } = 0m;
 
         // ===== Navigation properties =====
-        [ForeignKey(nameof(PikId))]
         public Pikture? Pikture { get; set; }
-
-        [ForeignKey(nameof(FatId))]
         public Fature? Fature { get; set; }
     }
 }
