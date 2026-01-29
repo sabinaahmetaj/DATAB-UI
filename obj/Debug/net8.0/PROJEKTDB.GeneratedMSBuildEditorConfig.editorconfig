@@ -110,6 +110,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGlrdHVyZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/DBINTERFACE/PROJEKTDB/Views/Reports/AllPikture.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xBbGxQaWt0dXJlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/DBINTERFACE/PROJEKTDB/Views/Reports/GalleryInvoices.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xHYWxsZXJ5SW52b2ljZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/DBINTERFACE/PROJEKTDB/Views/Rresht/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUnJlc2h0XENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

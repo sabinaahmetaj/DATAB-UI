@@ -1,0 +1,102 @@
+@using Microsoft.AspNetCore.Http
+@model PROJEKTDB.Models.GalleryInvoicesReportVM
+
+@{
+    ViewData["Title"] = "Raport: Faturat sipas Galerisë";
+    var role = Context.Session.GetString("PerRole");
+}
+
+<div class="card-glass p-4 p-md-5 mt-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+            <h1 class="page-title mb-1">Raport: Faturat sipas Galerisë</h1>
+            <div class="text-muted-2">
+                Lista e të gjitha faturave dhe vlera totale për çdo galeri
+            </div>
+        </div>
+
+        <a class="btn btn-outline-light"
+           asp-controller="Home"
+           asp-action="Index">
+            ⬅ Kthehu në Dashboard
+        </a>
+    </div>
+
+    <hr class="my-4" style="border-color: rgba(255,255,255,.12);" />
+
+    <!-- ===============================
+         TOTALI I SHITJEVE PER GALERI
+         =============================== -->
+    <div class="card-glass p-4 mb-4">
+        <div class="fw-bold fs-5 mb-3">
+            Totali i Shitjeve për çdo Galeri
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>GAL_ID</th>
+                    <th>Galeria</th>
+                    <th>Totali (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var g in Model.TotalsPerGallery)
+                {
+                    <tr>
+                        <td>@g.GalId</td>
+                        <td>@g.GalName</td>
+                        <td class="fw-bold">@g.TotalSales.ToString("0.00") €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.TotalsPerGallery.Count == 0)
+        {
+            <div class="text-muted-2 mt-3">
+                Nuk ka shitje të regjistruara.
+            </div>
+        }
+    </div>
+
+    <!-- ===============================
+         LISTA E FATURAVE SIPAS GALERISE
+         =============================== -->
+    <div class="card-glass p-4">
+        <div class="fw-bold fs-5 mb-3">
+            Lista e Faturave (të grupuara sipas Galerisë)
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>GAL_ID</th>
+                    <th>Galeria</th>
+                    <th>FAT_ID</th>
+                    <th>Data</th>
+                    <th>Total brenda kësaj Galerie (€)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var row in Model.InvoicesPerGallery)
+                {
+                    <tr>
+                        <td>@row.GalId</td>
+                        <td>@row.GalName</td>
+                        <td>@row.FatId</td>
+                        <td>@row.FatDat.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>@row.TotalInThisGallery.ToString("0.00") €</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.InvoicesPerGallery.Count == 0)
+        {
+            <div class="text-muted-2 mt-3">
+                Nuk u gjetën fatura për asnjë galeri.
+            </div>
+        }
+    </div>
+</div>
